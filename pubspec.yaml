@@ -27,7 +27,7 @@ dependencies:
 
   # AdMob — GOOGLE TEST IDs ONLY (see lib/ads/ad_config.dart).
   # Real ad unit IDs go in before Play release, never before.
-  google_mobile_ads: ^5.3.1
+  google_mobile_ads: ^9.1.0
 
   # Doctor report PDF (rewarded opt-in) + share
   pdf: ^3.11.1

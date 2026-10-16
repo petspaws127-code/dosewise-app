@@ -162,8 +162,9 @@ class _DoseWiseBannerState extends State<DoseWiseBanner> {
   Future<void> _load() async {
     final width = MediaQuery.of(context).size.width.truncate();
     final orientation = MediaQuery.of(context).orientation;
-    final size =
-        await AdSize.getAnchoredAdaptiveBannerAdSize(orientation, width);
+    final size = await AdSize
+        .getLargeAnchoredAdaptiveBannerAdSizeWithOrientation(
+            orientation, width);
     if (size == null || !mounted) {
       if (mounted) setState(() => _failed = true);
       return;
