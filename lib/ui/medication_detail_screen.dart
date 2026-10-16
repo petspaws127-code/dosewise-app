@@ -188,10 +188,8 @@ class _MedicationDetailScreenState
   }
 
   Widget _header(Medication med) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
+    return DepthCard(
+      child: Row(
           children: [
             PillGlyph(
               size: 48,
@@ -240,13 +238,13 @@ class _MedicationDetailScreenState
             ),
           ],
         ),
-      ),
     );
   }
 
   Widget _scheduleCard(Medication med) {
     const dayNames = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-    return Card(
+    return DepthCard(
+      soft: true,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -326,7 +324,8 @@ class _MedicationDetailScreenState
   }
 
   Widget _refillCard(Medication med) {
-    return Card(
+    return DepthCard(
+      soft: true,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -387,7 +386,8 @@ class _MedicationDetailScreenState
             BoxDecoration(color: c, shape: BoxShape.circle),
       ));
     }
-    return Card(
+    return DepthCard(
+      soft: true,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

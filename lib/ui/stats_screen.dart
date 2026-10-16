@@ -222,7 +222,7 @@ class _StatsScreenState extends State<StatsScreen> {
   }
 
   Widget _streakCard() {
-    return Card(
+    return DepthCard(
       child: Padding(
         padding: const EdgeInsets.all(18),
         child: Row(
@@ -258,7 +258,7 @@ class _StatsScreenState extends State<StatsScreen> {
         ? 1
         : _bars.map((b) => b.total).fold<int>(1, (a, b) => a > b ? a : b);
     const dayNames = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-    return Card(
+    return DepthCard(
       child: Padding(
         padding: const EdgeInsets.all(18),
         child: Column(
@@ -445,7 +445,8 @@ class _StatsScreenState extends State<StatsScreen> {
 
   Widget _medList() {
     if (_meds.isEmpty) {
-      return const Card(
+      return const DepthCard(
+        soft: true,
         child: Padding(
           padding: EdgeInsets.all(18),
           child: Text(
@@ -455,7 +456,8 @@ class _StatsScreenState extends State<StatsScreen> {
         ),
       );
     }
-    return Card(
+    return DepthCard(
+      soft: true,
       child: Padding(
         padding: const EdgeInsets.all(18),
         child: Column(
@@ -561,8 +563,23 @@ class _RingPainter extends CustomPainter {
     final c = Offset(size.width / 2, size.height / 2);
     final r = size.width / 2 - 6;
     canvas.drawCircle(c, r, bg);
-    canvas.drawArc(Rect.fromCircle(center: c, radius: r),
-        -3.14159 / 2, 2 * 3.14159 * frac.clamp(0.0, 1.0), false, fg);
+    // Soft drop shadow under the progress arc (mockup v3 depth).
+    final shadow = Paint()
+      ..color = DoseWiseColors.teal.withValues(alpha: 0.35)
+      ..strokeWidth = 10
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+    final arcRect = Rect.fromCircle(center: c, radius: r);
+    const start = -3.14159 / 2;
+    final sweep = 2 * 3.14159 * frac.clamp(0.0, 1.0);
+    if (sweep > 0) {
+      canvas.save();
+      canvas.translate(0, 3);
+      canvas.drawArc(arcRect, start, sweep, false, shadow);
+      canvas.restore();
+    }
+    canvas.drawArc(arcRect, start, sweep, false, fg);
   }
 
   @override

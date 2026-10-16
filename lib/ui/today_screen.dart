@@ -250,7 +250,7 @@ class TodayScreenState extends State<TodayScreen> {
               const SizedBox(height: 16),
               if (occ.status == DoseStatus.pending ||
                   occ.status == DoseStatus.snoozed) ...[
-                FilledButton(
+                GradientButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                     _take(occ);
@@ -455,7 +455,7 @@ class TodayScreenState extends State<TodayScreen> {
                   style: TextStyle(
                       fontSize: 15, color: DoseWiseColors.muted)),
               const SizedBox(height: 12),
-              FilledButton(
+              GradientButton(
                 onPressed: () {
                   setState(() {
                     _loading = true;
@@ -514,26 +514,25 @@ class TodayScreenState extends State<TodayScreen> {
   }
 
   Widget _doneCard() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          children: [
-            const Text('🎉', style: TextStyle(fontSize: 32)),
-            const SizedBox(height: 8),
-            const Text('All done for today',
-                style: TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.w800)),
-            const SizedBox(height: 4),
-            Text('$_streak-day streak — keep it going',
-                style: const TextStyle(
-                    fontSize: 13, color: DoseWiseColors.muted)),
-          ],
-        ),
+    return DepthCard(
+      child: Column(
+        children: [
+          const Text('🎉', style: TextStyle(fontSize: 32)),
+          const SizedBox(height: 8),
+          const Text('All done for today',
+              style: TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 4),
+          Text('$_streak-day streak — keep it going',
+              style: const TextStyle(
+                  fontSize: 13, color: DoseWiseColors.muted)),
+        ],
       ),
     );
   }
 
+  /// Teal-gradient hero (mockup v3 .card-hero): diagonal #13A184 → #08463E,
+  /// deep glow, white Taken button, ghost Snooze, muted Skip.
   Widget _heroCard(DoseOccurrence occ) {
     // All meds sharing this exact slot (spec: "med name(s)").
     final slotMates = _doses
@@ -545,50 +544,80 @@ class TodayScreenState extends State<TodayScreen> {
         .map((d) => d.med.name)
         .toSet()
         .join(', ');
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    final radius = BorderRadius.circular(16);
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: radius,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF13A184), Color(0xFF08463E)],
+        ),
+        boxShadow: const [
+          // .card-hero: 0 20px 42px rgba(14,124,107,.45)
+          BoxShadow(
+            color: Color(0x730E7C6B),
+            blurRadius: 42,
+            offset: Offset(0, 20),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: radius,
+        child: Stack(
           children: [
-            Text(
-              'NEXT DOSE · ${countdownCopy(occ.scheduledAt, widget.settings).toUpperCase()}',
-              style: const TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1,
-                  color: DoseWiseColors.teal),
-            ),
-            const SizedBox(height: 6),
-            Text(slotMates,
-                style: const TextStyle(
-                    fontSize: 19, fontWeight: FontWeight.w800)),
-            Text(
-              '${occ.med.dose.isEmpty ? '' : '${occ.med.dose} · '}${formatTime(occ.scheduledAt, widget.settings)}',
-              style: const TextStyle(
-                  fontSize: 13, color: DoseWiseColors.muted),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: FilledButton(
-                    onPressed: () => _take(occ),
-                    child: const Text('Taken'),
+            const _HeroTopHighlight(),
+            const _HeroBottomShade(),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'NEXT DOSE · ${countdownCopy(occ.scheduledAt, widget.settings).toUpperCase()}',
+                    style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1,
+                        color: Color(0xFFBDE8DB)),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => _snooze(occ),
-                    child: const Text('Snooze'),
+                  const SizedBox(height: 6),
+                  Text(slotMates,
+                      style: const TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white)),
+                  Text(
+                    '${occ.med.dose.isEmpty ? '' : '${occ.med.dose} · '}${formatTime(occ.scheduledAt, widget.settings)}',
+                    style: const TextStyle(
+                        fontSize: 13, color: Color(0xFFD8F0E8)),
                   ),
-                ),
-                TextButton(
-                  onPressed: () => _skip(occ),
-                  child: const Text('Skip'),
-                ),
-              ],
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _HeroTakenButton(
+                          onPressed: () => _take(occ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _HeroGhostButton(
+                          onPressed: () => _snooze(occ),
+                          label: 'Snooze',
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => _skip(occ),
+                        style: TextButton.styleFrom(
+                          foregroundColor: const Color(0xFFD8F0E8),
+                        ),
+                        child: const Text('Skip'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -597,13 +626,11 @@ class TodayScreenState extends State<TodayScreen> {
   }
 
   Widget _doseRow(DoseOccurrence occ) {
-    return Card(
-      child: InkWell(
-        onTap: () => _doseSheet(occ),
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+    return DepthCard(
+      soft: true,
+      onTap: () => _doseSheet(occ),
+      padding:
+          const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           child: Row(
             children: [
               Flexible(
@@ -639,8 +666,6 @@ class TodayScreenState extends State<TodayScreen> {
               StatusPill(status: occ.status),
             ],
           ),
-        ),
-      ),
     );
   }
 }
@@ -805,4 +830,126 @@ class _ConfettiPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _ConfettiPainter old) =>
       old.t != t;
+}
+
+/// Hero top light-catch: `inset 0 1px 0 rgba(255,255,255,.3)`.
+class _HeroTopHighlight extends StatelessWidget {
+  const _HeroTopHighlight();
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 0,
+      left: 14,
+      right: 14,
+      child: Container(
+        height: 1,
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.3),
+          borderRadius: BorderRadius.circular(1),
+        ),
+      ),
+    );
+  }
+}
+
+/// Hero bottom inner shade: `inset 0 -2px 6px rgba(0,0,0,.12)`.
+class _HeroBottomShade extends StatelessWidget {
+  const _HeroBottomShade();
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        height: 12,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.vertical(
+            bottom: Radius.circular(16),
+          ),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.black.withValues(alpha: 0),
+              Colors.black.withValues(alpha: 0.12),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// White Taken button on the teal hero (mockup .btn-take).
+class _HeroTakenButton extends StatelessWidget {
+  const _HeroTakenButton({required this.onPressed});
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 46,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x2E000000), // rgba(0,0,0,.18)
+            blurRadius: 14,
+            offset: Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(12),
+          child: const Center(
+            child: Text('Taken',
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF0A5C51))),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Ghost Snooze button on the teal hero.
+class _HeroGhostButton extends StatelessWidget {
+  const _HeroGhostButton(
+      {required this.onPressed, required this.label});
+  final VoidCallback onPressed;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 46,
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.16),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(12),
+          child: Center(
+            child: Text(label,
+                style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white)),
+          ),
+        ),
+      ),
+    );
+  }
 }

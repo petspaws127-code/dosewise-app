@@ -267,14 +267,12 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
         }
         return false; // never dismiss the card itself
       },
-      child: Card(
-        child: InkWell(
-          onTap: () => _openDetail(med),
-          onLongPress: () => _editDeleteSheet(med),
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.all(14),
-            child: Row(
+      child: DepthCard(
+        soft: true,
+        onTap: () => _openDetail(med),
+        onLongPress: () => _editDeleteSheet(med),
+        padding: const EdgeInsets.all(14),
+        child: Row(
               children: [
                 PillGlyph(
                   size: 40,
@@ -349,8 +347,6 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
                     color: DoseWiseColors.faint),
               ],
             ),
-          ),
-        ),
       ),
     );
   }

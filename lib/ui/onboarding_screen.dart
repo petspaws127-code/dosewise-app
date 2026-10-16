@@ -128,10 +128,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: Column(
           children: [
             const Spacer(),
-          const PillGlyph(size: 72),
+          const DoseWiseLogo(size: 88),
           const SizedBox(height: 20),
           const Text(
-            'Pill Reminder',
+            'DoseWise',
             style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.w800,
@@ -152,7 +152,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           _check('Alarms that ring on time, every time'),
           _check('Your data never leaves your phone'),
           const Spacer(),
-          FilledButton(
+          GradientButton(
             onPressed: () => setState(() => _step = 1),
             child: const Text('Get started'),
           ),
@@ -222,7 +222,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 style: const TextStyle(
                     fontSize: 15, color: DoseWiseColors.muted)),
             const Spacer(),
-            FilledButton(onPressed: onCta, child: Text(cta)),
+            GradientButton(onPressed: onCta, child: Text(cta)),
             const SizedBox(height: 8),
             TextButton(
                 onPressed: onSkip,

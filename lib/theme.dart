@@ -21,6 +21,17 @@ class DoseWiseColors {
 
   static const Color red = Color(0xFFD64545);
   static const Color redSoft = Color(0xFFFBE7E7);
+
+  /// Card border from the mockup (v2/v3 depth pass).
+  static const Color cardBorder = Color(0xFFF1ECE1);
+
+  /// Screen background gradient (mockup v3): light warm at top,
+  /// slightly deeper at bottom. Applied behind transparent scaffolds.
+  static const LinearGradient screenGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [Color(0xFFFCFAF5), Color(0xFFF4F0E6)],
+  );
 }
 
 class DoseWiseTheme {
@@ -36,11 +47,14 @@ class DoseWiseTheme {
         surface: DoseWiseColors.paper,
         onSurface: DoseWiseColors.ink,
       ),
-      scaffoldBackgroundColor: DoseWiseColors.paper,
+      // Transparent so the v3 screen gradient (app.dart builder) shows
+      // through on every screen.
+      scaffoldBackgroundColor: Colors.transparent,
       appBarTheme: const AppBarTheme(
-        backgroundColor: DoseWiseColors.paper,
+        backgroundColor: Colors.transparent,
         foregroundColor: DoseWiseColors.ink,
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: false,
         titleTextStyle: TextStyle(
           fontSize: 22,
@@ -54,7 +68,7 @@ class DoseWiseTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: DoseWiseColors.line),
+          side: const BorderSide(color: DoseWiseColors.cardBorder),
         ),
         margin: EdgeInsets.zero,
       ),

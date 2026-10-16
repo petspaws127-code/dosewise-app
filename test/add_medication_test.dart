@@ -1,6 +1,7 @@
 import 'package:dosewise/db/models.dart';
 import 'package:dosewise/settings_store.dart';
 import 'package:dosewise/ui/add_medication_screen.dart';
+import 'package:dosewise/ui/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -50,10 +51,10 @@ void main() {
     await _scrollToSave(tester, 'Save medication');
 
     final saveBtn =
-        find.widgetWithText(FilledButton, 'Save medication');
+        find.widgetWithText(GradientButton, 'Save medication');
     expect(saveBtn, findsOneWidget);
     // Name entered + default 8:00 AM time → enabled.
-    expect(tester.widget<FilledButton>(saveBtn).onPressed,
+    expect(tester.widget<GradientButton>(saveBtn).onPressed,
         isNotNull);
 
     await tester.tap(saveBtn);
@@ -68,10 +69,10 @@ void main() {
     await _pumpForm(tester);
     await _scrollToSave(tester, 'Save medication');
     final saveBtn =
-        find.widgetWithText(FilledButton, 'Save medication');
+        find.widgetWithText(GradientButton, 'Save medication');
     expect(saveBtn, findsOneWidget);
     expect(
-        tester.widget<FilledButton>(saveBtn).onPressed, isNull);
+        tester.widget<GradientButton>(saveBtn).onPressed, isNull);
   });
 
   testWidgets('Template chip fills name + dose in one tap',
@@ -90,7 +91,7 @@ void main() {
 
     await _scrollToSave(tester, 'Save medication');
     await tester.tap(
-        find.widgetWithText(FilledButton, 'Save medication'));
+        find.widgetWithText(GradientButton, 'Save medication'));
     await tester.pumpAndSettle();
     expect(saved!.name, 'Omega-3');
     expect(saved!.dose, '2 softgels');
@@ -146,7 +147,7 @@ void main() {
     expect(fields.first.controller!.text, 'Magnesium');
     await _scrollToSave(tester, 'Save changes');
     expect(
-        find.widgetWithText(FilledButton, 'Save changes'),
+        find.widgetWithText(GradientButton, 'Save changes'),
         findsOneWidget);
   });
 }

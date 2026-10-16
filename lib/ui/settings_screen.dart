@@ -231,8 +231,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 () => _pickFirstDay(),
               ),
               const SectionLabel('Privacy'),
-              const Card(
-                child: Padding(
+              DepthCard(
+                soft: true,
+                child: const Padding(
                   padding: EdgeInsets.all(16),
                   child: Text(
                     'Your data never leaves this phone. No account, no cloud, no analytics.',
@@ -247,8 +248,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _exporting ? () {} : _exportCsv,
               ),
               const SectionLabel('About'),
-              const Card(
-                child: Padding(
+              DepthCard(
+                soft: true,
+                child: const Padding(
                   padding: EdgeInsets.all(16),
                   child: Text(
                     'Free forever. No premium, no paywall.',
@@ -263,20 +265,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _tapRow('Rate the app', '', _rateApp),
               _tapRow('Version', '1.0.0+1', () {}),
               const SectionLabel('Danger zone'),
-              Card(
-                child: InkWell(
-                  onTap: _deleteAll,
-                  borderRadius: BorderRadius.circular(16),
-                  child: const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text(
-                      'Delete all my data',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: DoseWiseColors.red),
-                    ),
-                  ),
+              DepthCard(
+                soft: true,
+                onTap: _deleteAll,
+                child: const Text(
+                  'Delete all my data',
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: DoseWiseColors.red),
                 ),
               ),
             ],
@@ -288,7 +285,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _switchRow(
       String title, bool value, ValueChanged<bool> onChanged) {
-    return Card(
+    return DepthCard(
+      soft: true,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: SwitchListTile(
         title: Text(title,
             style: const TextStyle(
@@ -301,14 +300,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _tapRow(String title, String trailing, VoidCallback onTap) {
-    return Card(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: 16, vertical: 14),
-          child: Row(
+    return DepthCard(
+      soft: true,
+      onTap: onTap,
+      padding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Row(
             children: [
               Expanded(
                 child: Text(title,
@@ -329,8 +326,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   color: DoseWiseColors.faint),
             ],
           ),
-        ),
-      ),
     );
   }
 

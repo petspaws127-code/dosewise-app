@@ -173,22 +173,10 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                 runSpacing: 8,
                 children: [
                   for (final (name, dose) in kTemplates)
-                    ChoiceChip(
-                      label: Text(name),
+                    _QuickAddChip(
+                      label: name,
                       selected: _template == name,
-                      onSelected: (_) => _applyTemplate(name, dose),
-                      selectedColor: DoseWiseColors.teal,
-                      labelStyle: TextStyle(
-                        color: _template == name
-                            ? Colors.white
-                            : DoseWiseColors.teal,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                      ),
-                      backgroundColor: DoseWiseColors.tealSofter,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+                      onTap: () => _applyTemplate(name, dose),
                     ),
                 ],
               ),
@@ -346,9 +334,29 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                       height: 48,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
+                        // .day.on: gradient + 0 6px 14px rgba(14,124,107,.4)
+                        gradient: _days.contains(d)
+                            ? const LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Color(0xFF16AD87),
+                                  Color(0xFF0A6357)
+                                ],
+                              )
+                            : null,
                         color: _days.contains(d)
-                            ? DoseWiseColors.teal
+                            ? null
                             : DoseWiseColors.tealSofter,
+                        boxShadow: _days.contains(d)
+                            ? const [
+                                BoxShadow(
+                                  color: Color(0x660E7C6B),
+                                  blurRadius: 14,
+                                  offset: Offset(0, 6),
+                                ),
+                              ]
+                            : null,
                       ),
                       alignment: Alignment.center,
                       child: Text(
@@ -388,7 +396,7 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
               ),
             ),
             const SizedBox(height: 22),
-            FilledButton(
+            GradientButton(
               onPressed: _valid ? _save : null,
               child: Text(_isEdit ? 'Save changes' : 'Save medication'),
             ),
@@ -401,6 +409,77 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                     TextStyle(fontSize: 12, color: DoseWiseColors.muted),
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Quick-add template chip (mockup v3 .chip.on): gradient + deep glow
+/// when selected, soft teal tint otherwise.
+class _QuickAddChip extends StatelessWidget {
+  const _QuickAddChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(20);
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding:
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+        decoration: BoxDecoration(
+          borderRadius: radius,
+          gradient: selected
+              ? const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xFF16AD87), Color(0xFF0A6357)],
+                )
+              : null,
+          color: selected ? null : DoseWiseColors.tealSofter,
+          boxShadow: selected
+              ? const [
+                  BoxShadow(
+                    color: Color(0x6B0E7C6B), // rgba(14,124,107,.42)
+                    blurRadius: 18,
+                    offset: Offset(0, 8),
+                  ),
+                ]
+              : null,
+        ),
+        child: ClipRRect(
+          borderRadius: radius,
+          child: Stack(
+            children: [
+              if (selected)
+                Positioned(
+                  top: 0,
+                  left: 8,
+                  right: 8,
+                  child: Container(
+                    height: 1,
+                    color: Colors.white.withValues(alpha: 0.3),
+                  ),
+                ),
+              Text(
+                label,
+                style: TextStyle(
+                  color:
+                      selected ? Colors.white : DoseWiseColors.teal,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

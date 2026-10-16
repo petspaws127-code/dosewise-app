@@ -44,6 +44,13 @@ class _DoseWiseAppState extends State<DoseWiseApp> {
       title: 'DoseWise',
       debugShowCheckedModeBanner: false,
       theme: DoseWiseTheme.light,
+      // v3 screen gradient behind every (transparent) scaffold.
+      builder: (context, child) => Container(
+        decoration: const BoxDecoration(
+          gradient: DoseWiseColors.screenGradient,
+        ),
+        child: child,
+      ),
       home: _onboarded == null
           ? const Scaffold(
               body: Center(child: CircularProgressIndicator()))

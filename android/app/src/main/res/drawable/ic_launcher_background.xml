@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DoseWise launcher background: the logo tile's diagonal gradient
+     (#16AD87 → #09584E, same as the SVG gradient id dwlg). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:type="linear"
+        android:angle="315"
+        android:startColor="#16AD87"
+        android:endColor="#09584E" />
+</shape>
