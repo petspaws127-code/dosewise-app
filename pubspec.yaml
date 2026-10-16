@@ -40,5 +40,13 @@ dev_dependencies:
   flutter_lints: ^5.0.0
   sqflite_common_ffi: ^2.4.4
 
+# image 4.11.0 calls archive's ZLibDecoder.decodeLazy (added in archive
+# 4.1.0) while declaring archive ^4.0.9; pdf 3.12.0 caps archive at <4.1.0,
+# so the solver lands on archive 4.0.9 and the release Dart compile fails.
+# Pin image to the newest 4.10.x, which has no decodeLazy usage and works
+# with archive 4.0.9. (Upstream fixed the constraint in image 4.12.0.)
+dependency_overrides:
+  image: 4.10.2
+
 flutter:
   uses-material-design: true
