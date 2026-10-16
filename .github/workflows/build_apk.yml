@@ -1,0 +1,45 @@
+name: Build DoseWise APK
+
+# Manual trigger only — run from the Actions tab or via API dispatch.
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter 3.47.7
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: '3.47.7'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
+
+      # 100% local-first build — AdMob on Google TEST IDs (see lib/ads/ad_config.dart).
+      # Real ad unit IDs go in before the Play Store release build, never before.
+      - name: Build release APK
+        run: flutter build apk --release --split-per-abi
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dosewise-release-apk
+          path: build/app/outputs/flutter-apk/app-*-release.apk
+          if-no-files-found: error

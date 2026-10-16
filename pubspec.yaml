@@ -1,0 +1,44 @@
+name: dosewise
+description: "DoseWise: Pill & Vitamin Reminder — 100% free forever. Reminders that never miss."
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Local-first data (no login, no backend, no analytics in v1)
+  sqflite: ^2.4.2
+  path: ^1.9.0
+  shared_preferences: ^2.5.3
+  path_provider: ^2.1.5
+  intl: ^0.20.2
+
+  # Never-miss reminders
+  flutter_local_notifications: ^19.4.1
+  timezone: ^0.10.1
+  flutter_timezone: ^2.0.0
+
+  # In-app review prompt (7-day streak) — Play review API, guarded.
+  in_app_review: ^2.0.0
+
+  # AdMob — GOOGLE TEST IDs ONLY (see lib/ads/ad_config.dart).
+  # Real ad unit IDs go in before Play release, never before.
+  google_mobile_ads: ^5.3.1
+
+  # Doctor report PDF (rewarded opt-in) + share
+  pdf: ^3.11.1
+  printing: ^5.14.0
+  share_plus: ^11.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  sqflite_common_ffi: ^2.4.4
+
+flutter:
+  uses-material-design: true
